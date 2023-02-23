@@ -100,7 +100,8 @@ SELECT COUNT(star_rating)
 	as  "Vine 5-Star Reviews"
 FROM vine_table
 WHERE star_rating = 5 AND vine = 'Y';
--- 1607/1785997X100 = .08%
+-- 1607
+--/1785997X100 = .08%
 
 SELECT COUNT(star_rating)
 	as "Non-Vine 5-Star Reviews"
@@ -108,14 +109,30 @@ FROM vine_table
 WHERE star_rating = 5 AND vine = 'N';
 -- 1025317/1785997X100 = 57%
 
+SELECT DISTINCT CAST((select count(star_rating) FROM vine_table where star_rating = 5 AND vine = 'Y')as float) / 
+		CAST((select count(review_id) FROM vine_table) as float) * 100
+	   as percentage
+from vine_table;
+
+SELECT DISTINCT CAST((select count(star_rating) FROM vine_table where star_rating = 5 AND vine = 'N')as float) / 
+		CAST((select count(review_id) FROM vine_table) as float) * 100
+	   as percentage
+from vine_table;
+
 SELECT star_rating,
        count(star_rating) as stars,
 	   ROUND(
-	   (select count(star_rating) from vine_table where star_rating = 5 AND vine = 'Y') / (select count(review_id))
+	    count(star_rating) / (select count(vine) FROM vine_table WHERE vine = 'Y')
 	   ) as percentage
 from vine_table
-group by star_rating
-ORDER BY star_rating DESC;
+group by star_rating;
+
+SELECT (CAST(numer as float) / CAST(denom as float)) *  100 as percentage
+FROM
+(SELECT COUNT(review_id) as denom,
+	SUM(CASE WHEN star_rating = 5 AND vine = 'Y' then 1 else 0 end) as numer
+FROM vine_table
+)a;
 
 SELECT COUNT(star_rating)
 FROM vine_table
