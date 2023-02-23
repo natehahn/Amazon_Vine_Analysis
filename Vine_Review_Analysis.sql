@@ -79,17 +79,31 @@ SELECT COUNT(review_id)
 FROM vine_table;
 -- 1785997
 
+SELECT COUNT(review_id)
+	as  "Vine Reviews"
+FROM vine_table
+WHERE vine = 'Y';
+-- 4291
+
+SELECT COUNT(review_id)
+	as  "Non-Vine Reviews"
+FROM vine_table
+WHERE vine = 'N';
+-- 1781706
+
 SELECT COUNT(star_rating)
 FROM vine_table
 WHERE star_rating = 5;
 -- 1026924
 
 SELECT COUNT(star_rating)
+	as  "Vine 5-Star Reviews"
 FROM vine_table
-WHERE star_rating = 5 AND vine = 'Y'
+WHERE star_rating = 5 AND vine = 'Y';
 -- 1607/1785997X100 = .08%
 
 SELECT COUNT(star_rating)
+	as "Non-Vine 5-Star Reviews"
 FROM vine_table
 WHERE star_rating = 5 AND vine = 'N';
 -- 1025317/1785997X100 = 57%
@@ -97,10 +111,11 @@ WHERE star_rating = 5 AND vine = 'N';
 SELECT star_rating,
        count(star_rating) as stars,
 	   ROUND(
-	   count(star_rating) / (select count(vine) from vine_table where vine = 'Y')
+	   (select count(star_rating) from vine_table where star_rating = 5 AND vine = 'Y') / (select count(review_id))
 	   ) as percentage
 from vine_table
-group by star_rating;
+group by star_rating
+ORDER BY star_rating DESC;
 
 SELECT COUNT(star_rating)
 FROM vine_table
