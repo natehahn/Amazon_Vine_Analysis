@@ -111,13 +111,15 @@ WHERE star_rating = 5 AND vine = 'N';
 
 SELECT DISTINCT CAST((select count(star_rating) FROM vine_table where star_rating = 5 AND vine = 'Y')as float) / 
 		CAST((select count(review_id) FROM vine_table) as float) * 100
-	   as percentage
+	   as "Percentage of Vine 5-Star Reviews"
 from vine_table;
 
 SELECT DISTINCT CAST((select count(star_rating) FROM vine_table where star_rating = 5 AND vine = 'N')as float) / 
 		CAST((select count(review_id) FROM vine_table) as float) * 100
-	   as percentage
+	   as "Percentage of Non-Vine 5-Star Reviews"
 from vine_table;
+
+
 
 SELECT star_rating,
        count(star_rating) as stars,
